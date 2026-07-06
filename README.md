@@ -1,10 +1,23 @@
-# QuickBook — Appointment Booking System (MERN)
+# QuickBook — Appointment Booking System (MERN Stack)
 
-A full-stack appointment booking app. Customers browse services and book a slot;
-admins manage services and every booking. Built with MongoDB, Express, React, Node.
+A full-stack appointment booking web application built for [college/course name — add yours here].
+Customers can browse available services and book appointment slots; admins can manage
+services and view/update all bookings.
 
-Rename "QuickBook" and "services" in the UI text to match your chosen theme
-(salon, clinic, tutoring, car service, etc.) — the code underneath doesn't change.
+**Live Repository:** https://github.com/AkhilOO18/appointment-booking-system
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React (Vite), React Router, Axios |
+| Backend | Node.js, Express.js |
+| Database | MongoDB (Mongoose) |
+| Auth | JWT (JSON Web Tokens), bcrypt for password hashing |
+
+---
 
 ## Screenshots
 
@@ -18,133 +31,122 @@ Rename "QuickBook" and "services" in the UI text to match your chosen theme
 ![Booking](screenshots/Booking.png)
 
 **Admin Dashboard**
-![Admin Dashboard](screenshots/Admin-dashboard.png)
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
 ---
 
-## What's included
+## Features
 
-**Backend** (`/backend`)
-- Express REST API
-- MongoDB models: `User`, `Service`, `Appointment`
-- JWT authentication, bcrypt password hashing
-- Role-based access: `user` vs `admin` (the very first person to register becomes admin automatically)
-
-**Frontend** (`/frontend`)
-- React (Vite) with React Router
-- Pages: Home, Login, Register, Services, Book Appointment, My Appointments, Admin Dashboard
-- Axios client that auto-attaches the login token
+- User registration and login with JWT-based authentication
+- Role-based access control — the first registered user automatically becomes an **admin**
+- Customers can browse services and book available appointment slots
+- Customers can view and track their own appointments
+- Admins can add/manage services and update appointment status (e.g. Confirmed, Completed)
+- Passwords are hashed with bcrypt — never stored in plain text
+- Protected API routes secured with JWT middleware
 
 ---
 
-## Setup (do this first — ~20 minutes)
+## Project Structure
 
-### 1. Install Node.js
-Download from https://nodejs.org (LTS version) if you don't have it. Check with:
 ```
-node -v
+appointment-booking-system/
+├── backend/
+│   ├── config/          # Database connection
+│   ├── middleware/       # JWT auth middleware
+│   ├── models/           # User, Service, Appointment schemas
+│   ├── routes/           # Auth, Service, Appointment routes
+│   └── server.js
+├── frontend/
+│   └── src/
+│       ├── api/          # Axios instance (auto-attaches auth token)
+│       ├── components/   # Navbar, ProtectedRoute
+│       ├── context/       # Auth context
+│       └── pages/         # Home, Login, Register, Services, BookAppointment, MyAppointments, AdminDashboard
+├── screenshots/
+└── README.md
 ```
 
-### 2. Get a MongoDB database
-Easiest option — MongoDB Atlas (free, cloud, no install):
-1. Go to https://www.mongodb.com/cloud/atlas and create a free account
-2. Create a free "M0" cluster
-3. Under **Database Access**, create a user with a password
-4. Under **Network Access**, add IP `0.0.0.0/0` (allow from anywhere — fine for a college project)
-5. Click **Connect** → **Drivers** → copy the connection string, it looks like:
-   `mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/appointment-booking`
+---
 
-Alternative — install MongoDB locally from https://www.mongodb.com/try/download/community
-and use `mongodb://127.0.0.1:27017/appointment-booking` instead.
+## Getting Started (Local Setup)
 
-### 3. Backend setup
+### Prerequisites
+- [Node.js](https://nodejs.org) (LTS version)
+- A MongoDB database — either [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (free, cloud-hosted, recommended) or a local MongoDB install
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/AkhilOO18/appointment-booking-system.git
+cd appointment-booking-system
 ```
+
+### 2. Backend setup
+```bash
 cd backend
 npm install
 cp .env.example .env
 ```
-Open `.env` and paste your MongoDB connection string into `MONGO_URI`.
-Set `JWT_SECRET` to any random long string (e.g. mash your keyboard).
+Open `.env` and add:
+- `MONGO_URI` — your MongoDB connection string
+- `JWT_SECRET` — any random long string
 
-Run it:
-```
+Run the server:
+```bash
 npm run dev
 ```
-You should see `MongoDB connected successfully` and `Server running on http://localhost:5000`.
-Visit http://localhost:5000 in a browser — it should say "Appointment Booking API is running".
+Server runs at `http://localhost:5000`.
 
-### 4. Frontend setup
-Open a **new terminal window** (keep the backend running in the first one):
-```
+### 3. Frontend setup
+In a new terminal:
+```bash
 cd frontend
 npm install
 npm run dev
 ```
-Visit http://localhost:5173 — the app should load.
+App runs at `http://localhost:5173`.
 
 ---
 
-## How to use it / demo it
+## Demo Walkthrough
 
-1. **Register an account** — the first account you create automatically becomes an **admin**.
-   Register a second account normally to test the customer side.
-2. Log in as admin → go to **Admin Dashboard → Manage Services** → add 2-3 services
-   (e.g. "Haircut", "Consultation", whatever fits your theme).
-3. Log out, log in as your second (regular) account → go to **Services** → book one.
-4. Check **My Appointments** as the customer.
-5. Log back in as admin → **Admin Dashboard → Appointments** → change the status to "Confirmed".
-
-That flow (register → admin adds services → user books → admin confirms) is your demo script.
+1. Register an account — the **first account created becomes admin automatically**. Register a second account to test the customer flow.
+2. Log in as admin → **Admin Dashboard → Manage Services** → add a few services.
+3. Log out and log in as the regular user → go to **Services** → book an appointment.
+4. Check **My Appointments** to see the booking.
+5. Log back in as admin → **Admin Dashboard → Appointments** → update the status to "Confirmed".
 
 ---
 
-## 2-day plan if you're building/customizing this yourself
+## Key Design Decisions
 
-**Day 1 — Backend + understand the code (don't touch frontend yet)**
-- Hour 1: Get MongoDB Atlas set up, get backend running, confirm the health-check page loads
-- Hour 2-3: Open `models/`, `routes/authRoutes.js` and read every line — this is the part
-  most vivas/evaluations ask about ("how does login work", "how is the password protected")
-- Hour 3-4: Test the API directly with a tool like Postman or Thunder Client (VS Code extension):
-  - POST `/api/auth/register` with `{ "name": "Admin", "email": "admin@test.com", "password": "test123" }`
-  - POST `/api/auth/login` with the same email/password → copy the returned token
-  - GET `/api/services` (no auth needed)
-  - POST `/api/services` with header `Authorization: Bearer <token>` to add a service
-- Hour 4-5: Rename things to your theme in the database content (not code) — add real service names
+- **Authentication:** JWT tokens are issued on login (`authRoutes.js`) and verified on every protected route via `middleware/auth.js`. Passwords are hashed with bcrypt and never stored in plain text.
+- **Authorization:** An `adminOnly` middleware checks the role embedded in the JWT to restrict admin-only routes.
+- **Database schema:** Three collections — `User`, `Service`, `Appointment`. `Appointment` references both a `User` and a `Service` via MongoDB `ObjectId` references (similar to foreign keys in relational databases).
+- **Why MERN:** A single language (JavaScript) across the entire stack simplifies development; MongoDB's flexible schema suits an evolving project; React provides a responsive single-page application experience.
 
-**Day 2 — Frontend + polish + rehearse**
-- Hour 1-2: Get frontend running, click through every page, fix any typos/rebranding
-- Hour 2-3: Change "QuickBook" branding, colors if you want (`frontend/src/index.css` — all colors
-  are CSS variables at the top of the file), add your college/project title somewhere visible
-- Hour 3-4: Full run-through of the demo script above at least 3 times so it's smooth
-- Hour 4-5: Prepare answers for likely questions (see below) + write a short README/report if required
-- Leave the last hour as buffer — something always goes wrong the first time
-
-## Likely questions in a college evaluation (and where to point to)
-
-- **"How is the password kept secure?"** → `authRoutes.js`, `bcrypt.hash()` — passwords are never
-  stored in plain text, only a one-way hash.
-- **"How does the server know who's logged in?"** → JWT: `authRoutes.js` signs a token on login,
-  `middleware/auth.js` verifies it on every protected request.
-- **"How do you stop a regular user from accessing admin features?"** → `adminOnly` middleware
-  checks the role embedded in the token.
-- **"What's the database schema?"** → three collections: `User`, `Service`, `Appointment` —
-  Appointment references both a User and a Service by ID (this is what "relational" data looks
-  like in MongoDB — via `ObjectId` references, not foreign keys).
-- **"Why MERN?"** → one language (JavaScript) across the whole stack; MongoDB's flexible schema
-  suits fast-changing student projects; React gives a responsive single-page app experience.
+---
 
 ## Troubleshooting
 
-- **"MongoDB connection failed"** → double check `.env`, especially password special characters
-  (if your password has `@` or `#`, URL-encode it) and that your Atlas IP whitelist includes `0.0.0.0/0`.
-- **Frontend shows network errors** → make sure the backend terminal is still running and shows
-  port 5000; the frontend expects it at `http://localhost:5000` (set in `frontend/src/api/axios.js`).
-- **"Cannot find module"** → you likely skipped `npm install` in that folder.
+- **MongoDB connection failed** — check `.env` for a correct connection string. If your password contains special characters like `@` or `#`, URL-encode them. Also confirm your Atlas IP whitelist includes `0.0.0.0/0`.
+- **Frontend shows network errors** — make sure the backend server is running on port 5000 (`frontend/src/api/axios.js` expects `http://localhost:5000`).
+- **"Cannot find module" errors** — run `npm install` in the relevant folder (`backend` or `frontend`).
+
+---
 
 ## Future Improvements
 
 - Email/SMS reminders for upcoming appointments
 - Online payment integration at time of booking
-- Calendar sync (Google Calendar) for both customers and admin
+- Google Calendar sync for customers and admins
 - Customer reviews and ratings per service
 - Recurring appointment support
+
+---
+
+## Author
+
+AKHIL SOOD
+PUSSGRC
+GitHub: [@AkhilOO18](https://github.com/AkhilOO18)
