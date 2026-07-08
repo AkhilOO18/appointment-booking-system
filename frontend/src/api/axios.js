@@ -2,7 +2,7 @@ import axios from "axios";
 
 // All backend calls go through here. Change baseURL if your backend runs elsewhere.
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://appointment-booking-backend-0ffj.onrender.com/api",
 });
 
 // Attach the saved JWT (if any) to every outgoing request automatically
