@@ -10,7 +10,10 @@ const appointmentRoutes = require("./routes/appointmentRoutes");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://appointment-booking-system-mu-orcin.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 
 // Connect to MongoDB
